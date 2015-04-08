@@ -13,7 +13,8 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Navigation;
 #endif
-
+using Windows.UI;
+using Windows.UI.Xaml.Media;
 #if WINDOWS_UNIVERSAL
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -32,6 +33,8 @@ namespace Facebook.Client.Controls.WebDialog
         public WebDialogUserControl()
         {
             InitializeComponent();
+            BackgroundBrush = DefaultBackgroundBrush;
+
 #if WP8
             dialogWebBrowser.Navigating += DialogWebBrowserOnNavigating;
 #endif
@@ -273,6 +276,28 @@ namespace Facebook.Client.Controls.WebDialog
             LifecycleHelper.OnDialogDismissed += DismissDialogWhenDone;
 #endif
             dialogWebBrowser.Navigate(startUri);
+        }
+
+
+        private static readonly Brush DefaultBackgroundBrush = new SolidColorBrush(Color.FromArgb(128,44,44,44));
+        public static readonly DependencyProperty BackgroundBrushProperty = DependencyProperty.Register(
+            "BackgroundBrush", typeof(Brush), typeof(WebDialogUserControl), new PropertyMetadata(DefaultBackgroundBrush, OnBackgroundBrushChanged));
+
+        private static void OnBackgroundBrushChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs args)
+        {
+            var control = dependencyObject as WebDialogUserControl;
+            if (control != null)
+                control.BackgroundBrush = args.NewValue as Brush;
+        }
+
+        public Brush BackgroundBrush
+        {
+            get { return (Brush) GetValue(BackgroundBrushProperty); }
+            set
+            {
+                SetValue(BackgroundBrushProperty, value);
+                MainGrid.Background = value;
+            }
         }
     }
 }
