@@ -12,13 +12,14 @@ using Microsoft.Phone.Shell;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Navigation;
+using System.Windows.Media;
 #endif
 using Windows.UI;
-using Windows.UI.Xaml.Media;
 #if WINDOWS_UNIVERSAL
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
 #endif
 
 #if WINDOWS
@@ -33,7 +34,9 @@ namespace Facebook.Client.Controls.WebDialog
         public WebDialogUserControl()
         {
             InitializeComponent();
+#if WINDOWS
             BackgroundBrush = DefaultBackgroundBrush;
+#endif
 
 #if WP8
             dialogWebBrowser.Navigating += DialogWebBrowserOnNavigating;
@@ -278,7 +281,7 @@ namespace Facebook.Client.Controls.WebDialog
             dialogWebBrowser.Navigate(startUri);
         }
 
-
+#if WINDOWS
         private static readonly Brush DefaultBackgroundBrush = new SolidColorBrush(Color.FromArgb(128,44,44,44));
         public static readonly DependencyProperty BackgroundBrushProperty = DependencyProperty.Register(
             "BackgroundBrush", typeof(Brush), typeof(WebDialogUserControl), new PropertyMetadata(DefaultBackgroundBrush, OnBackgroundBrushChanged));
@@ -299,5 +302,7 @@ namespace Facebook.Client.Controls.WebDialog
                 MainGrid.Background = value;
             }
         }
+#endif
+
     }
 }

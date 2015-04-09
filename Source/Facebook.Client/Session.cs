@@ -28,9 +28,9 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Windows.UI.Xaml.Shapes;
 #if WINDOWS80 || WINDOWS_PHONE
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Shapes;
 using Windows.UI.Xaml.Controls.Primitives;
 #endif
 
@@ -127,6 +127,8 @@ namespace Facebook.Client
         public static Session ActiveSession = new Session();
 
         public static FacebookAuthenticationDelegate OnFacebookAuthenticationFinished;
+        public static FacebookDelegate OnFacebookAppRequestFinished;
+        public static FacebookDelegate OnFacebookFeedFinished;
 
         internal static SessionStateChanged OnSessionStateChanged;
 
