@@ -14,8 +14,18 @@
         <Controls:PlacePicker HorizontalAlignment="Right"  VerticalAlignment="Top" Width="676"/>
         <Controls:ProfilePicture HorizontalAlignment="Left"  VerticalAlignment="Bottom"/>
         <Controls:LoginButton HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
-        <Button x:Name="loginViaWebview" Content="Login via Webview" HorizontalAlignment="Left" Margin="850,718,0,0" VerticalAlignment="Top" Click="loginViaWebview_Click"/>
-        <Button  x:Name="showDialogButton" Content="Show Dialog" HorizontalAlignment="Left" Margin="510,718,0,0" VerticalAlignment="Top" Click="showDialogButton_Click"/>
+        
+        <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal">
+            <Button x:Name="loginViaWebview"
+                    Content="Login via Webview"
+                    Click="loginViaWebview_Click" />
+            <Button 
+                    Content="Logout via Webview"
+                    Click="logout_Click" />
+            <Button  x:Name="showDialogButton"
+                     Content="Show Dialog"
+                     Click="showDialogButton_Click" />
+        </StackPanel>
 
     </Grid>
 </Page>

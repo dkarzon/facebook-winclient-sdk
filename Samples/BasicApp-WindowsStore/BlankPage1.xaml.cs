@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -39,6 +40,22 @@ namespace BasicApp
             friendsList.Add("9074");
             friendsList.Add("535949260");
             Session.ShowAppRequestsDialog(null, "What's up", null);
+        }
+
+        private const string key = "FACEBOOK_SESSION";
+
+        private void logout_Click(object sender, RoutedEventArgs e)
+        {
+            var settings = ApplicationData.Current.LocalSettings;
+            if (!settings.Values.ContainsKey(key))
+                return;
+            settings.Values.Remove(key);
+
+            Session.ActiveSession.Logout();
+
+            if (!settings.Values.ContainsKey(key)) 
+                return;
+            settings.Values.Remove(key);
         }
     }
 }

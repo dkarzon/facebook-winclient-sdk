@@ -28,9 +28,9 @@ using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-
 #if WINDOWS80 || WINDOWS_PHONE
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Shapes;
 using Windows.UI.Xaml.Controls.Primitives;
 #endif
 
@@ -282,6 +282,11 @@ namespace Facebook.Client
 #endif
         private static Popup dialogPopup = new Popup();
 
+        public static Popup Popup
+        {
+            get { return dialogPopup; }
+        }
+
         public static bool IsDialogOpen
         {
             get { return dialogPopup.IsOpen; }
@@ -292,7 +297,7 @@ namespace Facebook.Client
             dialogPopup.IsOpen = false;
         }
 
-        public static void ShowAppRequestsDialog(WebDialogFinishedDelegate callback, String message="Select your friends", String title="", List<string> appIdList=null)
+        public static Popup ShowAppRequestsDialog(WebDialogFinishedDelegate callback, String message="Select your friends", String title="", List<string> appIdList=null)
         {
             var webDialog = new WebDialogUserControl();
             
@@ -330,9 +335,13 @@ namespace Facebook.Client
 
             // Open the popup.
             dialogPopup.IsOpen = true;
+
+            return dialogPopup;
         }
 
-        public static void ShowFeedDialog(string toId = "",string link = "",string linkName = "",string linkCaption = "",string linkDescription = "",string picture = "")
+
+
+        public static Popup ShowFeedDialog(string toId = "",string link = "",string linkName = "",string linkCaption = "",string linkDescription = "",string picture = "")
         {
             //dialogPopup.Loaded += dialogPopup_Loaded;
 
@@ -371,6 +380,35 @@ namespace Facebook.Client
 
             // Open the popup.
             dialogPopup.IsOpen = true;
+            return dialogPopup;
+        }
+
+        private static TaskCompletionSource<bool> dialogTCS;
+        public static Task<bool> ShowAppRequestsDialogAsync(WebDialogFinishedDelegate callback, String message = "Select your friends", String title = "", List<string> appIdList = null)
+        {
+            dialogTCS = new TaskCompletionSource<bool>();
+
+            ShowAppRequestsDialog(callback, message, title, appIdList);
+            dialogPopup.Closed += PopupOnClosed;
+
+            return dialogTCS.Task;
+        }
+
+        private static void PopupOnClosed(object sender, object o)
+        {
+            dialogPopup.Closed -= PopupOnClosed;
+            dialogTCS.SetResult(true);
+        }
+
+        public static Task<bool> ShowFeedDialogAsync(string toId = "", string link = "", string linkName = "", string linkCaption = "", string linkDescription = "", string picture = "")
+        {
+            dialogTCS = new TaskCompletionSource<bool>();
+
+            ShowFeedDialog(toId, link, linkName, linkCaption, linkDescription, picture);
+            
+            dialogPopup.Closed += PopupOnClosed;
+
+            return dialogTCS.Task;
         }
 
         internal async Task<AccessTokenData> LoginAsync(FacebookLoginBehavior loginBehavior)
